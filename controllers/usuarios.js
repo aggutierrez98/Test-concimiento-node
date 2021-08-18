@@ -1,4 +1,5 @@
 const { response, request } = require("express");
+const obtenerEdad = require("../helpers/obtenerEdad");
 const Usuario = require("../models/usuario");
 
 const usuariosGet = async (req = request, res = response) => {
@@ -50,13 +51,7 @@ const usuariosGetPorId = async (req = request, res = response) => {
 const usuariosPost = async (req, res = response) => {
     const { name, last_name, legajo, email, birthday } = req.body;
 
-    const birthdayDate = new Date(birthday);
-    const date = new Date();
-    const age = date.getFullYear() - birthdayDate.getFullYear();
-    const mounth = date.getMonth() - birthdayDate.getMonth();
-    if (mounth < 0 || (mounth === 0 && date.getDate() < bithday.getDate())) {
-        age--;
-    };
+    const age = obtenerEdad(birthday);
 
     try {
         const usuario = new Usuario({ name, last_name, legajo, email, birthday, age });
@@ -76,7 +71,12 @@ const usuariosPost = async (req, res = response) => {
 
 const usuariosPut = async (req, res = response) => {
     const { id } = req.params;
-    const { legajo, email, age, ...resto } = req.body;
+    const { legajo, email, age, birthday, ...resto } = req.body;
+
+    if (birthday) {
+        const age = obtenerEdad(birthday);
+        resto.age = age;
+    };
 
     try {
         await Usuario.findByIdAndUpdate(id, resto);

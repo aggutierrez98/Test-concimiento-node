@@ -3,42 +3,37 @@ const cors = require("cors");
 
 const { dbConnection } = require("../database/config");
 
+var envJSON = require('../env.variables.json');
+var node_env = process.env.NODE_ENV || 'development';
+var port = envJSON[node_env].PORT
+
 class Server {
 
     constructor() {
         this.app = express();
-        this.port = process.env.PORT;
+        this.port = port;
 
         this.paths = {
             usuarios: "/api/usuarios",
         };
 
-        // Conectar a base de datos
         this.conectarDB();
-
-        // Middlewares
         this.middlewares();
-
-        // Rutas de mi aplicación
         this.routes();
-    }
+    };
 
     async conectarDB() {
         await dbConnection();
-    }
+    };
 
     middlewares() {
-
-        // CORS
         this.app.use(cors());
-
-        // Lectura y parseo del body
         this.app.use(express.json());
-    }
+    };
 
     routes() {
         this.app.use(this.paths.usuarios, require("../routes/usuarios"));
-    }
+    };
 
     listen() {
         const server = this.app.listen(this.port, () => {
@@ -46,7 +41,7 @@ class Server {
         });
 
         return server;
-    }
+    };
 }
 
 module.exports = Server;

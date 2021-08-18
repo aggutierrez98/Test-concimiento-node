@@ -1,10 +1,8 @@
 const mongoose = require('mongoose');
 
-const { MONGODB_CNN, MONGODB_TEST_CNN, NODE_ENV } = process.env;
-
-const connectionString = NODE_ENV === "test"
-    ? MONGODB_TEST_CNN
-    : MONGODB_CNN
+var envJSON = require('../env.variables.json');
+var node_env = process.env.NODE_ENV || 'development';
+var connectionString = envJSON[node_env].MONGO_DB_CNN
 
 const dbConnection = async () => {
 

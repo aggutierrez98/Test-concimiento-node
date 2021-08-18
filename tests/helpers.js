@@ -3,68 +3,39 @@ const { app } = require("../app");
 
 const api = supertest(app);
 
-const initialCategories = [
+const initialUsers = [
     {
-        nombre: "lacteos",
-    },
-    {
-        nombre: "vegetales",
-    },
+        name: "Juan",
+        last_name: "Garay",
+        legajo: "juanga",
+        email: "juanga@gmail.com",
+        birthday: "January 25, 1985 08:30:00"
+    }, {
+        name: "Ramon",
+        last_name: "Pererez",
+        legajo: "ramonpe",
+        email: "ramonperez@gmail.com",
+        birthday: "April 21, 1965 10:45:00"
+    }
 ];
 
-const initialProducts = [
-    {
-        nombre: "leche",
-    },
-    {
-        nombre: "yogurt",
-    },
-];
-
-const initialUser = {
-    nombre: "agustin",
-    correo: "agustin@test.com",
-    password: "123456",
-    rol: "ADMIN_ROLE",
-};
-
-const getAllCategorias = async () => {
-    const response = await api.get("/api/categorias/");
-    const nombres = response.body.categorias.map((categoria) => categoria.nombre);
+const getAllUsers = async () => {
+    const response = await api.get("/api/usuarios");
+    const nombres = response.body.map((usuario) => usuario.name);
     return {
         nombres,
-        categorias: response.body.categorias,
+        usuarios: response.body,
     };
 };
 
-const cargarIdPrimeraCategoria = async () => {
-    const response = await api.get("/api/categorias/");
-    const id = response.body.categorias[0]._id;
-    return id;
-};
-
-const getAllProductos = async () => {
-    const response = await api.get("/api/productos/");
-    const nombres = response.body.productos.map((producto) => producto.nombre);
-    return {
-        nombres,
-        productos: response.body.productos,
-    };
-};
-
-const cargarIdPrimerProducto = async () => {
-    const response = await api.get("/api/productos/");
-    const id = response.body.productos[0]._id;
-    return id;
+const cargarIdPrimerUser = async () => {
+    const response = await api.get("/api/usuarios");
+    return response.body[0].id;
 };
 
 module.exports = {
-    initialCategories,
-    initialUser,
+    initialUsers,
     api,
-    getAllCategorias,
-    cargarIdPrimeraCategoria,
-    initialProducts,
-    getAllProductos,
-    cargarIdPrimerProducto,
+    getAllUsers,
+    cargarIdPrimerUser,
 };
